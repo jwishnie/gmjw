@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script type="text/javascript">
+    const cwidth = 1200;
+    const cheight = 675;
+    var ileft = 418;
+    var itop = 30;
+    var canvas = null;
+    var ctx = null;
+    var disp_img = null;
+    var upload_input = null;
+    var frame = null;
+    window.onload = (e => {
+      canvas = document.getElementById('canvas');
+      ctx = canvas.getContext('2d');
+      disp_img = document.getElementById('display');
+      upload_input = document.getElementById('file');
+      frame = new Image;
+      frame.onload = draw_frame;
+      frame.src = 'JaimeCapeFinal.png';
+    });
+
+    function draw_frame() {
+      ctx.drawImage(frame, 0, 0, cwidth, cheight);
+    }
+
+    function draw_upload(img, x_nudge = 0, y_nudge = 0, scale = 1) {
+      ileft += y_nudge;
+      itop += x_nudge;
+        ctx.globalCompositeOperation = 'destination-over';
+        if (img.height < img.width) {
+          ctx.drawImage(img, ileft, itop, 597 * img.width / img.height, 597);
+        } else {
+          ctx.drawImage(img, ileft, itop, 749, 749 * img.height / img.width);
+        }
+        canvas.toBlob(b => {
+          document.getElementById('display').src = URL.createObjectURL(b);
+        });
+    }
+
+    function displayImage(x_nudge = 0, y_nudge = 0, scale = 1) {
+      ctx.clearRect(0, 0, cwidth, cheight);
+      draw_frame();
+      createImageBitmap(upload_input.files[0]).then(img => draw_upload(img,x_nudge, y_nudge, scale));
+    }
+  </script>
+</head>
+
+<body>
+  <form action="index.html" method="post">
+    <input id="file" type="file" accept="image/*" onchange='displayImage()'>
+  </form>
+  <img id="display" src="" alt="">
+  <canvas id="canvas" width="1200" height="675" style="margin: 12px 0px"></canvas>
+  <div style="margin: 5px 0px">
+    <button onclick="displayImage(0,-5)">Left</button>
+    <button onclick="displayImage(0,5)">Right</button>
+  </div>
+  <div>
+    <button onclick="displayImage(-5,0)">Up</button>
+    <button onclick="displayImage(5,0)">Down</button>
+  </div>
+</body>
+
+</html>
