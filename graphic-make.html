@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+      function makeImage() {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        var frame = new Image();
+        var image = new Image();
+        frame.src = 'JaimeCapeFinal.png';
+        frame.onload = function() {
+            ctx.drawImage(frame, 0, 0, 1200, 675);
+            upload = document.getElementById('file').files.item(0);
+            upload.crossOrigin = 'anonymous';
+            image.src = URL.createObjectURL(upload);
+            image.onload = function() {
+              ctx.globalCompositeOperation = 'destination-over';
+              if (image.height < image.width) {
+                ctx.drawImage(image, 418, 30, 597 * image.width / image.height, 597)
+              }
+              ctx.drawImage(image, 418, 30, 749, 749 * image.height / image.width)
+              document.getElementById('display').src = canvas.toDataURL('image/png')
+            }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <form action="index.html" method="post">
+      <input id="file" type="file" accept="image/*" onchange='makeImage()'>
+    </form>
+    <img id="input-file" src="" alt="" style="display:none">
+    <img id="display" src="" alt="">
+    <canvas id="canvas" width="1200" height="675"></canvas>
+  </body>
+</html>
