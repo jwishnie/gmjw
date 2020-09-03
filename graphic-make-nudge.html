@@ -14,11 +14,14 @@
     var disp_img = null;
     var upload_input = null;
     var frame = null;
+    var upload_img = null;
     window.onload = (e => {
       canvas = document.getElementById('canvas');
       ctx = canvas.getContext('2d');
       disp_img = document.getElementById('display');
       disp_img.onload = (e) => {URL.revokeObjectURL(this.src)};
+      upload_img = new Image();
+      upload_img.onload = disp_img.onload;
       upload_input = document.getElementById('file');
       frame = new Image;
       frame.onload = draw_frame;
@@ -46,7 +49,8 @@
       function displayImage(x_nudge = 0, y_nudge = 0, scale = 1) {
         ctx.clearRect(0, 0, cwidth, cheight);
         draw_frame();
-        draw_upload(URL.createObjectURL(upload_input.files[0]), x_nudge, y_nudge, scale);
+        upload_img.src = new Image().src = URL.createObjectURL(upload_input.files[0]);
+        draw_upload(upload_img, x_nudge, y_nudge, scale);
       }
   </script>
 </head>
