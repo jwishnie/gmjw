@@ -37,7 +37,7 @@
         } else {
           ctx.drawImage(img, ileft, itop, 749, 749 * img.height / img.width);
         }
-        document.getElementById('display').src = canvas.toDataURL();
+        canvas.toBlob().then( b => {document.getElementById('display').src = URL.createObjectURL(b);}
     }
 
     function displayImage(x_nudge = 0, y_nudge = 0, scale = 1) {
