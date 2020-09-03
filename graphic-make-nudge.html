@@ -18,6 +18,7 @@
       canvas = document.getElementById('canvas');
       ctx = canvas.getContext('2d');
       disp_img = document.getElementById('display');
+      disp_img.onload = (e) => {URL.revokeObjectURL(this.src)};
       upload_input = document.getElementById('file');
       frame = new Image;
       frame.onload = draw_frame;
@@ -38,7 +39,7 @@
         ctx.drawImage(img, ileft, itop, 749, 749 * img.height / img.width);
       }
       canvas.toBlob(b => {
-          document.getElementById('display').src = URL.createObjectURL(b);
+          disp_img.src = URL.createObjectURL(b);
         })
       }
 
