@@ -31,20 +31,22 @@
     function draw_upload(img, x_nudge = 0, y_nudge = 0, scale = 1) {
       ileft += y_nudge;
       itop += x_nudge;
-        ctx.globalCompositeOperation = 'destination-over';
-        if (img.height < img.width) {
-          ctx.drawImage(img, ileft, itop, 597 * img.width / img.height, 597);
-        } else {
-          ctx.drawImage(img, ileft, itop, 749, 749 * img.height / img.width);
-        }
-        canvas.toBlob().then( b => {document.getElementById('display').src = URL.createObjectURL(b);}
-    }
+      ctx.globalCompositeOperation = 'destination-over';
+      if (img.height < img.width) {
+        ctx.drawImage(img, ileft, itop, 597 * img.width / img.height, 597);
+      } else {
+        ctx.drawImage(img, ileft, itop, 749, 749 * img.height / img.width);
+      }
+      canvas.toBlob(b => {
+          document.getElementById('display').src = URL.createObjectURL(b);
+        })
+      }
 
-    function displayImage(x_nudge = 0, y_nudge = 0, scale = 1) {
-      ctx.clearRect(0, 0, cwidth, cheight);
-      draw_frame();
-      createImageBitmap(upload_input.files[0]).then(img => draw_upload(img,x_nudge, y_nudge, scale));
-    }
+      function displayImage(x_nudge = 0, y_nudge = 0, scale = 1) {
+        ctx.clearRect(0, 0, cwidth, cheight);
+        draw_frame();
+        createImageBitmap(upload_input.files[0]).then(img => draw_upload(img, x_nudge, y_nudge, scale));
+      }
   </script>
 </head>
 
