@@ -3,6 +3,24 @@
 
 <head>
   <script src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js'></script>
+  <script>
+    fabric.Image.prototype.scaledWidth = function() {
+        return this.width * this.scaleX;
+    }
+
+    fabric.Image.prototype.scaledHeight = function() {
+        return this.height * this.scaleY;
+    }
+
+    fabric.Image.prototype.isPortrait = function() {
+        return this.height >= this.width;
+    }
+
+    fabric.Image.prototype.isLandscape = function() {
+        return !this.isPortrait();
+    }
+
+  </script>
   <style>
     img.hidden {
       display: none;
@@ -32,18 +50,6 @@
       c.add(fabFrame);
     }
 
-    function scaledWidth(fabImg) {
-      return fabImg.width * fabImg.scaleX;
-    }
-
-    function scaledHeight(fabImg) {
-      return fabImg.height * fabImg.scaleY;
-    }
-
-    function portrait(fab_img) {
-      return fab_img.height > fab_img.width;
-    }
-
     function enableButtons() {
       for (b of document.getElementsByClassName('inset_dependent')) {
         b.disabled = false;
@@ -68,16 +74,16 @@
     function displayInset(nx = 0, ny = 0) {
       if (fabInset === null) {
         fabInset = new fabric.Image(inset_tag);
-        if (portrait(fabInset)) {
+        if (fabInset.isPortrait()) {
           fabInset.scaleToWidth(vheight);
           fabInset.set({
-            top: ny + vheight - scaledHeight(fabInset) / 2
+            top: ny + vheight - fabInset.scaledHeight() / 2
           });
 
         } else {
           fabInset.scaleToHeight(vwidth);
           fabInset.set({
-            left: nx + vwidth - scaledWidth(fabInset) / 2
+            left: nx + vwidth - fabInset.scaledWidth() / 2
           });
 
         }
@@ -87,8 +93,8 @@
       } else {
         let new_top = fabInset.top + ny;
         let new_left = fabInset.left + nx;
-        let swidth = scaledWidth(fabInset);
-        let sheight = scaledHeight(fabInset);
+        let swidth = fabInset.scaledWidth();
+        let sheight = fabInset.scaledHeight();
 
         // check all bounds
         if (new_left > vleft) {
