@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js'></script>
+  <style>
+    img.hidden {
+      display: none;
+    }
+
+    canvas,
+    div {
+      margin: 12px 0px
+    }
+  </style>
+  <script>
+    const vleft = 417;
+    const vwidth = 742;
+    const vright = vleft + vwidth;
+    const vtop = 40;
+    const vheight = 595;
+    const vbot = vtop + vheight;
+    var inset_tag = null;
+    var c = null;
+    var fabFrame = null;
+    var fabInset = null;
+    window.onload = (e) => {
+      c = new fabric.StaticCanvas('canvas');
+      inset_tag = document.getElementById('inset');
+      inset_tag.onload = insetLoaded;
+      fabFrame = new fabric.Image(document.getElementById('frame'));
+      c.add(fabFrame);
+    }
+
+    function scaledWidth(fabImg) {
+      return fabImg.width * fabImg.scaleX;
+    }
+
+    function scaledHeight(fabImg) {
+      return fabImg.height * fabImg.scaleY;
+    }
+
+    function portrait(fab_img) {
+      return fab_img.height > fab_img.width;
+    }
+
+    function enableButtons() {
+      for (b of document.getElementsByClassName('inset_dependent')) {
+        b.disabled = false;
+      }
+    }
+
+    function loadInset(input) {
+      inset_tag.src = new Image().src = URL.createObjectURL(input.files[0]);
+    }
+
+    function insetLoaded() {
+      URL.revokeObjectURL(this.src);
+      if (!(fabInset === null)) {
+        c.remove(fabInset);
+        fabInset = null;
+      } else {
+        enableButtons();
+      }
+      displayInset();
+    }
+
+    function displayInset(nx = 0, ny = 0) {
+      if (fabInset === null) {
+        fabInset = new fabric.Image(inset_tag);
+        if (portrait(fabInset)) {
+          fabInset.scaleToWidth(vheight);
+          fabInset.set({
+            top: ny + vheight - scaledHeight(fabInset) / 2
+          });
+
+        } else {
+          fabInset.scaleToHeight(vwidth);
+          fabInset.set({
+            left: nx + vwidth - scaledWidth(fabInset) / 2
+          });
+
+        }
+        c.add(fabInset);
+        fabInset.sendToBack();
+        c.renderAll();
+      } else {
+        let new_top = fabInset.top + ny;
+        let new_left = fabInset.left + nx;
+        let swidth = scaledWidth(fabInset);
+        let sheight = scaledHeight(fabInset);
+
+        // check all bounds
+        if (new_left > vleft) {
+          // left edge past left side of view port, peg left
+          new_left = vleft;
+        } else if (new_left + swidth < vright) {
+          // right edge of image too far left, peg to right edge
+          new_left = vright - swidth;
+        }
+
+        if (new_top > vtop) {
+          // top of image too low, peg to new_top
+          new_top = vtop;
+        } else if (new_top + sheight < vbot) {
+          // bottom too high
+          new_top = vbot - sheight;
+        }
+
+        fabInset.set({
+          top: new_top,
+          left: new_left
+        });
+        c.renderAll();
+      }
+    }
+
+    function download() {
+      let imgUrl = c.toDataURL({format: 'png'});
+
+      let element = document.createElement('a');
+      element.setAttribute('href', imgUrl);
+      element.setAttribute('download', 'teamjaime.png');
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+      URL.revokeObjectURL(imgUrl);
+    }
+  </script>
+
+</head>
+
+<body>
+  <img id="frame" src='JaimeCapeFinal.png' class="hidden" />
+  <img id="inset" src="" class="hidden" />
+  <form action="index.html" method="post">
+    <input id="file" type="file" accept="image/*" onchange='loadInset(this)'>
+  </form>
+  <div>
+    <button class="inset_dependent" disabled onclick="displayInset(-10,0)">left</button>
+    <button class="inset_dependent" disabled onclick="displayInset(10,0)">right</button>
+    <button class="inset_dependent" disabled onclick="displayInset(0,-10)">up</button>
+    <button class="inset_dependent" disabled onclick="displayInset(0,10)">down</button>
+  </div>
+  <canvas id='canvas' width='1200' height='675' style="display: block;"></canvas>
+  <div>
+    <button class="inset_dependent" disabled onclick='download()'>download</download>
+  </div>
+</body>
+
+
+
+</html>
