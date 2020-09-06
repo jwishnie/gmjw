@@ -2,25 +2,8 @@
 <html lang="en">
 
 <head>
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js'></script>
-  <script>
-    fabric.Image.prototype.scaledWidth = function() {
-        return this.width * this.scaleX;
-    }
-
-    fabric.Image.prototype.scaledHeight = function() {
-        return this.height * this.scaleY;
-    }
-
-    fabric.Image.prototype.isPortrait = function() {
-        return this.height >= this.width;
-    }
-
-    fabric.Image.prototype.isLandscape = function() {
-        return !this.isPortrait();
-    }
-
-  </script>
+  <meta charset="utf-8">
+  <script src='fabric.min.js'></script>
   <style>
     img.hidden {
       display: none;
@@ -31,7 +14,42 @@
       margin: 12px 0px
     }
   </style>
-  <script>
+</head>
+
+<body>
+  <img id="frame" src='JaimeCapeFinal.png' class="hidden" />
+  <img id="inset" src="" class="hidden" />
+  <form action="index.html" method="post">
+    <input id="file" type="file" accept="image/*" onchange='loadInset(this)'>
+  </form>
+  <div>
+    <button class="inset_dependent" disabled onclick="displayInset(-10,0)">left</button>
+    <button class="inset_dependent" disabled onclick="displayInset(10,0)">right</button>
+    <button class="inset_dependent" disabled onclick="displayInset(0,-10)">up</button>
+    <button class="inset_dependent" disabled onclick="displayInset(0,10)">down</button>
+  </div>
+  <canvas id='canvas' width='1200' height='675' style="display: block;"></canvas>
+  <div>
+    <button class="inset_dependent" disabled onclick='download()'>download</download>
+  </div>
+
+  <script type="text/javascript">
+    fabric.Image.prototype.scaledWidth = function() {
+      return this.width * this.scaleX;
+    }
+
+    fabric.Image.prototype.scaledHeight = function() {
+      return this.height * this.scaleY;
+    }
+
+    fabric.Image.prototype.isPortrait = function() {
+      return this.height >= this.width;
+    }
+
+    fabric.Image.prototype.isLandscape = function() {
+      return !this.isPortrait();
+    }
+
     const vleft = 417;
     const vwidth = 742;
     const vright = vleft + vwidth;
@@ -42,8 +60,10 @@
     var c = null;
     var fabFrame = null;
     var fabInset = null;
-    window.onload = (e) => {
+
+    window.onload = function() {
       c = new fabric.StaticCanvas('canvas');
+      // c.enableRetinaScaling = false;
       inset_tag = document.getElementById('inset');
       inset_tag.onload = insetLoaded;
       fabFrame = new fabric.Image(document.getElementById('frame'));
@@ -122,7 +142,9 @@
     }
 
     function download() {
-      let imgUrl = c.toDataURL({format: 'png'});
+      let imgUrl = c.toDataURL({
+        format: 'png'
+      });
 
       let element = document.createElement('a');
       element.setAttribute('href', imgUrl);
@@ -137,27 +159,5 @@
       URL.revokeObjectURL(imgUrl);
     }
   </script>
-
-</head>
-
-<body>
-  <img id="frame" src='JaimeCapeFinal.png' class="hidden" />
-  <img id="inset" src="" class="hidden" />
-  <form action="index.html" method="post">
-    <input id="file" type="file" accept="image/*" onchange='loadInset(this)'>
-  </form>
-  <div>
-    <button class="inset_dependent" disabled onclick="displayInset(-10,0)">left</button>
-    <button class="inset_dependent" disabled onclick="displayInset(10,0)">right</button>
-    <button class="inset_dependent" disabled onclick="displayInset(0,-10)">up</button>
-    <button class="inset_dependent" disabled onclick="displayInset(0,10)">down</button>
-  </div>
-  <canvas id='canvas' width='1200' height='675' style="display: block;"></canvas>
-  <div>
-    <button class="inset_dependent" disabled onclick='download()'>download</download>
-  </div>
 </body>
-
-
-
 </html>
