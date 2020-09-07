@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.1.0/fabric.min.js'></script>
     <style>
         img.hidden {
@@ -17,29 +19,33 @@
 </head>
 
 <body>
-    <img id="frame" src='JaimeCapeFinal.png' class="hidden" />
-    <img id="inset" src="" class="hidden" />
-    <form action="index.html" method="post">
-        <input id="file" type="file" accept="image/*" onchange='loadInset(this)'>
-    </form>
-    <div>
-        <button class="inset_dependent" disabled onclick="displayInset(-10,0)">left</button>
-        <button class="inset_dependent" disabled onclick="displayInset(10,0)">right</button>
-        <button class="inset_dependent" disabled onclick="displayInset(0,-10)">up</button>
-        <button class="inset_dependent" disabled onclick="displayInset(0,10)">down</button>
-    </div>
-    <canvas id='canvas' width='1200' height='675'></canvas>
-    <div>
-        <button class="inset_dependent" disabled onclick='download()'>download</download>
+    <div class="container-fluid">
+        <img id="frame" src='JaimeCapeFinal.png' class="hidden" />
+        <img id="inset" src="" class="hidden" />
+        <form action="index.html" method="post">
+            <input id="file" type="file" accept="image/*" onchange='loadInset(this)'>
+        </form>
+        <div>
+            <button class="inset_dependent" disabled onclick="displayInset(-10,0)">left</button>
+            <button class="inset_dependent" disabled onclick="displayInset(10,0)">right</button>
+            <button class="inset_dependent" disabled onclick="displayInset(0,-10)">up</button>
+            <button class="inset_dependent" disabled onclick="displayInset(0,10)">down</button>
+        </div>
+        <canvas id='canvas' width='1200' height='675'></canvas>
+        <div>
+            <button class="inset_dependent" disabled onclick='download()'>download</download>
+        </div>
     </div>
 
     <script type="text/javascript">
-        const vleft = 417;
-        const vwidth = 742;
-        const vright = vleft + vwidth;
-        const vtop = 40;
-        const vheight = 595;
-        const vbot = vtop + vheight;
+        const fheight = 675; // height in pixels of frame image
+        const fwidhth = 1200; // height in pixels of frame image
+        const vleft = 417; // left edge of viewport (hole of the frame)
+        const vwidth = 742; // width of viewport
+        const vright = vleft + vwidth; // right edge of viewport
+        const vtop = 40; // top of viewport
+        const vheight = 595; // height of viewport
+        const vbot = vtop + vheight; // bottom of view port
         var inset_tag = null;
         var c = null;
         var fabFrame = null;
