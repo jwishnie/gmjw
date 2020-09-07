@@ -46,7 +46,13 @@
         var fabInset = null;
 
         window.onload = function() {
+            //
             // add useful functions to fabric.images
+            //
+
+            // When drawn to the canvas, the size will be the width of the
+            // image X it's scaling factor. These helpers return
+            // the scaled dimensions
             fabric.Image.prototype.scaledWidth = function() {
                 return this.width * this.scaleX;
             }
@@ -55,14 +61,15 @@
                 return this.height * this.scaleY;
             }
 
+            // Helpers to say whether an image is Lanscape or Portrait
             fabric.Image.prototype.isPortrait = function() {
-                return this.height >= this.width;
+                return this.scaledHeight() >= this.scaledWidth();
             }
 
             fabric.Image.prototype.isLandscape = function() {
                 return !this.isPortrait();
             }
-            
+
             c = new fabric.StaticCanvas('canvas');
             // c.enableRetinaScaling = false;
             inset_tag = document.getElementById('inset');
