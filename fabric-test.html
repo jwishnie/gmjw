@@ -46,6 +46,7 @@
         var fabInset = null;
 
         window.onload = function() {
+            // add useful functions to fabric.images
             fabric.Image.prototype.scaledWidth = function() {
                 return this.width * this.scaleX;
             }
@@ -61,7 +62,7 @@
             fabric.Image.prototype.isLandscape = function() {
                 return !this.isPortrait();
             }
-
+            
             c = new fabric.StaticCanvas('canvas');
             // c.enableRetinaScaling = false;
             inset_tag = document.getElementById('inset');
